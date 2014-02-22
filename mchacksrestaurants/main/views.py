@@ -7,7 +7,7 @@ import urllib
 import json
 
 def test(request):
-	return render(request, 'main/main.html')
+	return render(request, 'main/index2.html')
 
 
 def search(request):
