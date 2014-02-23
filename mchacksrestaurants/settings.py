@@ -3,7 +3,7 @@ from os.path import dirname, abspath, join, pardir
 import os
 import dj_database_url
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
