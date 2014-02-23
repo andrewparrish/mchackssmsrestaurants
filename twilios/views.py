@@ -11,3 +11,9 @@ def science(request):
 	msg.message("Science!")
 	h = HttpResponse(str(msg), content_type="text/xml")
 	return h
+
+def science2(request, msg):
+	resp = twiml.Response()
+	resp.message(str(msg))
+	h = HttpResponse(str(resp), content_type="text/xml")
+	return h
