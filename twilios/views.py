@@ -80,13 +80,13 @@ def _tertiary(text, sender, user):
 		if placelist['status'] == 'OK':
 			placelistsimple = placelisting(placelist['results'])
 			for place in placelistsimple:
-				_indmessage(str(place))
+				_indmessage(str(place.name))
 	h = HttpResponse(str(msg), content_type="text/xml")
 	return h
 
 def _indmessage(message):
 	msg = twiml.Response()
-	msg.message = str(message)
+	msg.message(message)
 	h = HttpResponse(str(msg), content_type="text/xml")
 	return h
 
@@ -106,8 +106,8 @@ def _fourth(text, sender, user):
 		placelist = places(latitude, longitude, str(user.directions))
 		if placelist['status'] == 'OK':
 			placelistsimple = placelisting(placelist['results'])
-			directs = directionsto(latitude, longitude, placelistsimple[int(text)-1])
+			directs = directionslistcomplete(str(placelistsimple[int(text)-1].name), str(user.location))
 			for direct in directs:
-				msg.message+=str(direct)+'\n'
+				_indmessage(str(direct))
 	user.delete()
 	h = HttpResponse(str(msg), content_type="text/xml")
