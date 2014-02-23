@@ -1,23 +1,13 @@
-
+{% extends 'nav.html' %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
-
-    <title>Signin Template for Bootstrap</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="{{ STATIC_URL }}css/carousel.css" rel="stylesheet">
+    {% block head %}
     <link href="{{ STATIC_URL }}css/signin.css" rel="stylesheet">
-
+    <link href="{{ STATIC_URL }}css/template.css" rel="styleshee">
+    <script type="text/JavaScript" src="{{STATIC_URL}}js/init.js"></script>
+    {% endblock head %}
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -32,85 +22,20 @@
 <!-- NAVBAR
 ================================================== -->
   <body>
-    <div class="navbar-wrapper">
-      <div class="container">
-        <div class="navbar navbar-inverse navbar-static-top" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#">GoHere</a>
-            </div>
-            <div class="navbar-collapse collapse">
-              <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li class="divider"></li>
-                    <li class="dropdown-header">Nav header</li>
-                    <li><a href="#">Separated link</a></li>
-                    <li><a href="#">One more separated link</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </div>
+    {% block content %}
+      <section class="parallax" id="top" data-speed="6" data-type="background">
+        <div class="container-fluid fill">
+          <form class="form-signin" role="form" method="POST" action".">{% csrf_token %}
+            <h2 class="form-signin-heading">Go Where?</h2>
+            <input name="keyword" type="inquiry" class="form-control" placeholder="Go Here!" required autofocus>
+            <h2 class="bubble">Where are you now?</h2>
+            <input name="where" type="inquiry" class="form-control" placeholder="First St, Second St, City" required autofocus>
+            <button class="btn btn-lg btn-primary btn-block" value="Submit" type="submit">Submit</button>
+          </form>
         </div>
+      </section>
 
-      </div>
-    </div>
-
-
-
-  <body>
-
-    <div class="container">
-      <div style="text-align: center"><img src="{{ STATIC_URL }}keyboard.png" alt="mobile_map" text-align = "center" height = "70%" width = "70%" style = "padding-top: 40px"/></div>
-      <form class="form-signin" role="form">
-        <h2 class="form-signin-heading">What are you in the mood for?</h2>
-        <input type="inquiry" class="form-control" placeholder="Italian food NEAR Laval" required autofocus>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
-        <h2 class="bubble">Enter cross streets. </h2>
-        
-      </form>
-
-      <form class="form-signin" role="form">
-        <h2 class="form-signin-heading">Enter Cross Streets</h2>
-        <input type="email" class="form-control" placeholder="First St." required autofocus>
-        <input type="password" class="form-control" placeholder="Second St." required>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
-        <h2 class="bubble">Here are 5 places:1, 2, 3, 4, 5. </h2>
-
-      </form>
-
-
-      <form class="form-signin" role="form">
-        <h2 class="form-signin-heading">Please Choose</h2>
-        <input type="email" class="form-control" placeholder="3" required autofocus>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
-        <h2 class="bubble">Here are bus routes along with prices: 1, 2, 3. </h2>
-
-      </form>
-
-      <form class="form-signin" role="form">
-        <h2 class="form-signin-heading">Select Route</h2>
-        <input type="email" class="form-control" placeholder="2" required autofocus>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
-      </form>
-
-      <div style="text-align: center"><img src="{{ STATIC_URL }}mobile_map.jpg" alt="mobile_map" text-align = "center" height = "40%" width = "40%" style = "padding-top: 40px"/></div>
-
-    </div> <!-- /container -->
+      {% endblock content %}
 
 
     <!-- Bootstrap core JavaScript
