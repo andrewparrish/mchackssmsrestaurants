@@ -9,7 +9,7 @@ urlpatterns = patterns('',
 	url(r'^search/?', 'main.views.search'),
 
 	url(r'^science/$', 'twilios.views.science'),
-	url(r'^wat/(?P<msg>.+)$', 'twilios.views.science2'),
+	url(r'^wat/(?P<msg>.*)$', 'twilios.views.science2'),
 	url(r'^preferences/$', 'main.views.preferences'),
     # Examples:
     # url(r'^$', 'mchacksrestaurants.views.home', name='home'),
