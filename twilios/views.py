@@ -43,11 +43,11 @@ def whynot(request):
 			return _fourth(grp.group(0), sender, user)
 		else:
 			if user.location is None:
-				user.location = text
-				return _secondary(text, sender)
+				user.location = body
+				return _secondary(body, sender)
 			else:
-				user.directions = (text, sender)
-				return _tertiary(text, sender, user)
+				user.directions = (body, sender)
+				return _tertiary(body, sender, user)
 		
 
 def _primary(text, sender):
