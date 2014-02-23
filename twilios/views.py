@@ -27,10 +27,7 @@ def science2(request):
 def whynot(request):
 	body = request.GET['Body']
 	sender = request.GET['From']
-	ls = subprocess.check_output('ls')
-	ls = ls.split('\n')
 
-	print ls
 	num = Directions.objects.filter(phone=sender[1:]).count()
 	if num is 0:
 		user = Directions(phone=sender[1:])
@@ -106,5 +103,5 @@ def _fourth(text, sender, user):
 			directs = directionsto(latitude, longitude, placelistsimple[int(text)])
 			for direct in directs:
 				msg.message+=str(direct)+'\n'
-	user.delete()g
+	user.delete()
 	h = HttpResponse(str(msg), content_type="text/xml")
