@@ -6,7 +6,9 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
 	url(r'^$', 'main.views.test'),
-	url(r'^search/?', 'main.views.search')
+	url(r'^search/?', 'main.views.search'),
+
+	url(r'^science/$', 'twilios.views.science'),
     # Examples:
     # url(r'^$', 'mchacksrestaurants.views.home', name='home'),
     # url(r'^mchacksrestaurants/', include('mchacksrestaurants.foo.urls')),
@@ -16,4 +18,5 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+
 )

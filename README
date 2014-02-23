@@ -1,2 +1,8 @@
 TWILIO
 SUP SON
+
+dependencies:
+
+python2.7
+Django (and dependencies)
+twilio (and dependencies)
