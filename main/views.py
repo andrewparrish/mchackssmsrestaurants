@@ -1,5 +1,5 @@
 # Create your views here.
-from django.shortcuts import render_to_response, redirect, render
+from django.shortcuts import render_to_response, redirect, render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 
@@ -11,6 +11,8 @@ import re
 from datetime import *
 
 from place import *
+
+from main.models import Directions
 
 def gmaps(where):
 	url = 'https://maps.googleapis.com/maps/api/geocode/json?'
@@ -104,20 +106,36 @@ def directionslistcomplete(keyword, where):
 				steps = leg['steps']
 				for step in steps:
 					if step['travel_mode'] == unicode('WALKING'):
-						directionlist.append(step['html_instructions'])
+						directionlist.append(str(step['html_instructions']))
 					elif step['travel_mode'] == unicode('TRANSIT'):
-						directionlist.append('Take '+step['transit_details']['line']['name']+' to '+step['transit_details']['arrival_stop']['name'])
+						directionlist.append(str('Take '+step['transit_details']['line']['name']+' to '+step['transit_details']['arrival_stop']['name']))
 			return directionlist
 		else:
 			return directionlist
 	else:
 		return directionlist
 
+def direction(request):
+	directions = request.session['directions']
+	splitted = directions.split('/')
+	print splitted
+	context = {'directions': splitted}
+	return render(request, 'gotoplace.html', context)
+
 def gotoplace(request):
 	if request.method == 'POST':
 		keyword = request.POST.get('keyword', '')
 		where = request.POST.get('where')
 		context = directionslistcomplete(keyword, where)
+		arr = []
+		for c in context:
+			cd = c.encode('utf8')
+			arr.append(cd)
+		stri = '/'.join(arr)
+		request.session['directions'] = stri
+		return redirect('/directions')
 	else:
 		redirect('/preferences')
 	return render_to_response('preferences.html',{},context_instance=RequestContext(request))
+
+

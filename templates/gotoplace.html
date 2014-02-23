@@ -1,0 +1,20 @@
+{% extends 'nav.html' %}
+{% load staticfiles %}
+<html>
+<head>
+	{% block head %}
+	<link href="{{ STATIC_URL }}css/signin.css" rel="stylesheet">
+	{% endblock head %}
+</head>
+<body>
+{% block content %}
+<div class="container-fluid fill">
+	<ul id="directions">
+         {% for direction in directions %}
+         	<li>{{ direction }}</li>
+         {% endfor %}
+     </ul>
+</div>
+{% endblock content %}
+</body>
+</html>
