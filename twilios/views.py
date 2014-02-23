@@ -32,7 +32,7 @@ def whynot(request):
 
 	print ls
 	num = Directions.objects.filter(phone=sender[1:]).count()
-	if num is not 0:
+	if num is 0:
 		user = Directions(phone=sender[1:])
 		user.save()
 		return _primary(body, sender[1:])
