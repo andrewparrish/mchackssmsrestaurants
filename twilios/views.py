@@ -3,7 +3,7 @@
 
 from django.shortcuts import render_to_response, redirect, render_to_response
 from django.http import HttpResponseRedirect, HttpResponse
-from main import views
+from main.views import *
 from django.shortcuts import render_to_response, redirect, render, get_object_or_404
 
 from main.models import Directions
@@ -36,7 +36,7 @@ def whynot(request):
 	else:
 		user = Directions.objects.get(phone=sender[1:])
 		grp = re.match(r'^(\d)$', body)
-		if grp is not None:
+		if grp is not Noneg:
 			return _fourth(grp.group(0), sender, user)
 		else:
 			if user.location is unicode(''):
