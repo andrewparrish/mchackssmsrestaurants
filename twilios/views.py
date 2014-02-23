@@ -33,8 +33,8 @@ def whynot(request):
 	print ls
 	user = Directions.objects.get(phone=sender[1:])
 	if user is None:
-		direct = Directions(phone=sender[1:])
-		direct.save()
+		user = Directions(phone=sender[1:])
+		user.save()
 		return _primary(body, sender[1:])
 	else:
 		grp = re.match(r'^(\d)$', body)
