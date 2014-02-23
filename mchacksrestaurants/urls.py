@@ -10,7 +10,8 @@ urlpatterns = patterns('',
 
 	url(r'^science/$', 'twilios.views.science'),
 	url(r'^gotoplace/$', 'main.views.gotoplace'),
-    url(r'^directions/$', 'main.views.direction')
+    url(r'^directions/$', 'main.views.direction'),
+    url(r'^letsgo/$', 'twilios.views.whynot')
     # Examples:
     # url(r'^$', 'mchacksrestaurants.views.home', name='home'),
     # url(r'^mchacksrestaurants/', include('mchacksrestaurants.foo.urls')),

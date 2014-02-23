@@ -3,8 +3,11 @@
 
 from django.shortcuts import render_to_response, redirect, render_to_response
 from django.http import HttpResponseRedirect, HttpResponse
-from main.view import *
+from main import views
+from django.shortcuts import render_to_response, redirect, render, get_object_or_404
 
+from main.models import Directions
+import re
 from twilio import twiml
 
 import subprocess
@@ -28,42 +31,76 @@ def whynot(request):
 	ls = ls.split('\n')
 
 	print ls
-
-	if (sender[1:] + '.txt') in ls:
-		return _secondary(body, sender[1:])
-	else:
+	user = Directions.objects.get(phone=sender[1:])
+	if user is None:
+		direct = Directions(phone=sender[1:])
+		direct.save()
 		return _primary(body, sender[1:])
+	else:
+		grp = re.match(r'^(\d)$', body)
+		if grp:
+			return _fourth(grp.group(0), sender, user)
+		else:
+			if user.location is None:
+				user.location = text
+				return _secondary(text, sender)
+			else:
+				user.directions = (text, sender)
+				return _tertiary(text, sender, user)
+		
 
 def _primary(text, sender):
-	with open(sender + '.txt', 'w') as nooooo:
-		nooooo.write(text)
-		print "_primary"
-		msg = twiml.Response()
-		msg.message("Ask a question of the Helix")
-		h = HttpResponse(str(msg), content_type="text/xml")
-		return h
+	print "_primary"
+	msg = twiml.Response()
+	msg.message("Text where you are. (cross street 1, cross street 2, city")
+	h = HttpResponse(str(msg), content_type="text/xml")
+	return h
 
+#address recieved text options
 def _secondary(text, sender):
-	with open(sender + '.txt', 'r') as whyyy:
-		s = whyyy.read()
+	msg = twiml.Response()
+	msg.message = ("Now Send Us Where You Want to Go in one word like \'Chinese food\'")
+	h = HttpResponse(str(msg), content_type="text/xml")
+	return h
 
-		msg = twiml.Response()
-		msg.message("The Helix says: " + _process_request(text) + 
-			"\n\nAnd YOU says: "+s+"\nDonphan never forgets.")
-		h = HttpResponse(str(msg), content_type="text/xml")
-		print "_secondary"
-		subprocess.call(['rm', sender + '.txt'])
+def _tertiary(text, sender, user):
+	msg = twiml.Response()
+	msg.message = ("Text us the number you want to go to!\n")
+	jsonstuff = gmaps(user.location)
+	jsonstr = json.dumps(jsonstuff)
+	if jsonstuff['status'] == 'OK':
+		results = jsonstuff['results']
+		mapping =results[0]
+		location = mapping['geometry']
+		latlong = location['location']
+		latitude = latlong['lat']
+		longitude = latlong['lng']
 
-		return h
+		placelist = places(latitude, longitude, user.directions)
+		if placelist['status'] == 'OK':
+			placelistsimple = placelisting(placelist['results'])
+			for place in placelistsimple:
+				msg.message+=str(place)+'\n'
+	h = HttpResponse(str(msg), content_type="text/xml")
+	return h
 
-def _process_request(text):
-	if (text[0] >= "a" and text[0] < "g") or(text[0] >= "A" and text[0] < "G"):
-	   return "No way, son."
-	if (text[0] >= "g" and text[0] < "n") or(text[0] >= "G" and text[0] < "N"):
-	   return "For science!"
-	if (text[0] >= "n" and text[0] < "u") or(text[0] >= "N" and text[0] < "U"):
-	   return "Try again later."
-	if (text[0] >= "u" and text[0] < "z") or(text[0] >= "U" and text[0] < "Z"):
-	   return "Most certainly."
-	else: 
-		return "NO U"
+#number recieved
+def _fourth(text, sender, user):
+	msg= twiml.Response()
+	jsonstuff = gmaps(user.location)
+	jsonstr = json.dumps(jsonstuff)
+	if jsonstuff['status'] == 'OK':
+		results = jsonstuff['results']
+		mapping =results[0]
+		location = mapping['geometry']
+		latlong = location['location']
+		latitude = latlong['lat']
+		longitude = latlong['lng']
+
+		placelist = places(latitude, longitude, user.directions)
+		if placelist['status'] == 'OK':
+			placelistsimple = placelisting(placelist['results'])
+			directs = directionsto(latitude, longitude, placelistsimple[int(text)])
+			for direct in directs:
+				msg.message+=str(direct)+'\n'
+	h = HttpResponse(str(msg), content_type="text/xml")
