@@ -37,6 +37,7 @@ def whynot(request):
 		user.save()
 		return _primary(body, sender[1:])
 	else:
+		user = Directions.objects.get(phone=sender[1:])
 		grp = re.match(r'^(\d)$', body)
 		if grp is not None:
 			return _fourth(grp.group(0), sender, user)
