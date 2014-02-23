@@ -38,7 +38,7 @@ def _primary(text, sender):
 		nooooo.write(text)
 		print "_primary"
 		msg = twiml.Response()
-		msg.message("Choose 1-5")
+		msg.message("Ask a question of the Helix")
 		h = HttpResponse(str(msg), content_type="text/xml")
 		return h
 
@@ -47,9 +47,26 @@ def _secondary(text, sender):
 		s = whyyy.read()
 
 		msg = twiml.Response()
-		msg.message(text + ": " + s)
+		msg.message("The Helix says: " + _process_request(text) + 
+			"\n\nAnd YOU says: "+s+"\nDonphan never forgets.")
 		h = HttpResponse(str(msg), content_type="text/xml")
 		print "_secondary"
 		subprocess.call(['rm', sender + '.txt'])
 
 		return h
+
+def _process_request(text):
+	if (text[0] >= "a" and text[0] < "g") ||
+	   (text[0] >= "A" and text[0] < "G"):
+	   return "No way, son."
+	if (text[0] >= "g" and text[0] < "n") ||
+	   (text[0] >= "G" and text[0] < "N"):
+	   return "For science!"
+	if (text[0] >= "n" and text[0] < "u") ||
+	   (text[0] >= "N" and text[0] < "U"):
+	   return "Try again later."
+	if (text[0] >= "u" and text[0] < "z") ||
+	   (text[0] >= "U" and text[0] < "Z"):
+	   return "Most certainly."
+	else: 
+		return "NO U"
