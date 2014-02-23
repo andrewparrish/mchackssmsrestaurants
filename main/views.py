@@ -28,3 +28,6 @@ def search(request):
  	jsonparse = json.load(j)
 
 	return HttpResponse(json.dumps(jsonparse), content_type="application/json")
+
+def preferences(request):
+	return render(request, 'preferences.html')
