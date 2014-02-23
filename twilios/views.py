@@ -80,7 +80,7 @@ def _tertiary(text, sender, user):
 		if placelist['status'] == 'OK':
 			placelistsimple = placelisting(placelist['results'])
 			for place in placelistsimple:
-				_indmessage(str(place.name))
+				_indmessage(place.name.encode('utf8'))
 	h = HttpResponse(str(msg), content_type="text/xml")
 	return h
 
