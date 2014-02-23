@@ -8,6 +8,7 @@ import urllib
 
 import json
 import re
+from datetime import *
 
 from place import *
 
@@ -72,13 +73,24 @@ def directionsto(latitude, longitude, destination):
 	url = 'https://maps.googleapis.com/maps/api/directions/json?'
 	params = urllib.urlencode({
 		'key' : 'AIzaSyAiWF1P0ha-Kxz9ahNz14at5FVKeUb1oiE',
-		'origin' : str(latitude)+','+str(longitude),
-		'destination' : str(destination.latitude)+','+str(destination.longitude),
+		'origin' : str(latitude)+str(',')+str(longitude),
+		'destination' : str(destination.latitude)+str(',')+str(destination.longitude),
 		'sensor' : 'false',
-		'mode' : 'transit'
+		'mode' : 'transit',
+		'departure_time' : str(int(datetime.now().strftime("%s")) * 1000)
 		})
 	j = urllib2.urlopen(url+params)
 	jsonparse = json.load(j)
+	if jsonparse['status'] == 'ZERO_RESULTS':
+		params = urllib.urlencode({
+		'key' : 'AIzaSyAiWF1P0ha-Kxz9ahNz14at5FVKeUb1oiE',
+		'origin' : str(latitude)+str(',')+str(longitude),
+		'destination' : str(destination.latitude)+str(',')+str(destination.longitude),
+		'sensor' : 'false',
+		'mode' : 'walking'
+		})
+		j = urllib2.urlopen(url+params)
+		jsonparse = json.load(j)
 	return jsonparse
 
 def gotoplace(request):
