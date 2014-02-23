@@ -31,8 +31,8 @@ def whynot(request):
 	ls = ls.split('\n')
 
 	print ls
-	user = Directions.objects.get(phone=sender[1:])
-	if user is None:
+	num = Directions.objects.filter(phone=sender[1:]).count()
+	if num is not 0:
 		user = Directions(phone=sender[1:])
 		user.save()
 		return _primary(body, sender[1:])
