@@ -25,10 +25,10 @@ def whynot(request):
 	sender = request.GET['From']
 	ls = subprocess.check_output('ls').split('\n')
 
-	if sender.lstrip("+") in ls:
-		return _secondary(body, sender.lstrip("+"))
+	if sender.lstrip[1:] in ls:
+		return _secondary(body, sender[1:]
 	else:
-		return _primary(body, sender.lstrip("+"))
+		return _primary(body, sender[1:]
 
 def _primary(text, sender):
 	with open(sender + '.txt', 'w') as nooooo:
