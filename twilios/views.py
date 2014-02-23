@@ -14,6 +14,6 @@ def science(request):
 
 def science2(request, msg):
 	resp = twiml.Response()
-	resp.message(str(request.get_full_path()))
+	resp.message(str(request.GET))
 	h = HttpResponse(str(resp), content_type="text/xml")
 	return h
