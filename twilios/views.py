@@ -42,7 +42,7 @@ def whynot(request):
 		if grp is not '':
 			return _fourth(grp.group(0), sender, user)
 		else:
-			if user.location is '':
+			if user.location is unicode(''):
 				user.location = body
 				user.save()
 				return _secondary(body, sender)
