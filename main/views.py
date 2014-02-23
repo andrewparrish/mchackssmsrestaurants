@@ -22,8 +22,9 @@ def foodchoose(food):
 def gmaps(where):
 	url = 'https://maps.googleapis.com/maps/api/geocode/json?'
 	params = urllib.urlencode({
+		'key' : 'AIzaSyAiWF1P0ha-Kxz9ahNz14at5FVKeUb1oiE',
 		'address' : ''+where,
-		'sensor' : 'false'
+		'sensor' : 'false',
 		})
 	j = urllib2.urlopen(url+params)
 	jsonparse = json.load(j)
@@ -32,9 +33,11 @@ def gmaps(where):
 def places(latitude, longitude, food):
 	url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?'
 	params = urllib.urlencode({
+		'key' : 'AIzaSyAiWF1P0ha-Kxz9ahNz14at5FVKeUb1oiE',
 		'location' : str(latitude)+','+str(longitude),
 		'keyword' : food,
-		'sensor' : 'false'
+		'sensor' : 'false',
+		'radius' : str(20000)
 		})
 	j = urllib2.urlopen(url+params)
 	jsonparse = json.load(j)
@@ -64,6 +67,7 @@ def preferences(request):
 		foodarr = foodchoose(food)
 		jsonstuff = gmaps(where)
 		jsonstr = json.dumps(jsonstuff)
+		print jsonstr
 		if jsonstuff['status'] == 'OK':
 			print 'okay'
 			results = jsonstuff['results']
@@ -85,6 +89,6 @@ def preferences(request):
 			redirect('/preferences')
 
 
-		if foodarr is 'false' or crossone is '' or crosstwo is '':
+		if foodarr is 'false' or where is '':
 			redirect('/preferences')
 	return render_to_response('preferences.html',{},context_instance=RequestContext(request))
