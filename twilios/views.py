@@ -66,7 +66,7 @@ def _secondary(text, sender):
 def _tertiary(text, sender, user):
 	msg = twiml.Response()
 	msg.message = ("Text us the number you want to go to!\n")
-	jsonstuff = gmaps(user.location)
+	jsonstuff = gmaps(str(user.location))
 	jsonstr = json.dumps(jsonstuff)
 	if jsonstuff['status'] == 'OK':
 		results = jsonstuff['results']
@@ -76,7 +76,7 @@ def _tertiary(text, sender, user):
 		latitude = latlong['lat']
 		longitude = latlong['lng']
 
-		placelist = places(latitude, longitude, user.directions)
+		placelist = places(latitude, longitude, str(user.directions))
 		if placelist['status'] == 'OK':
 			placelistsimple = placelisting(placelist['results'])
 			for place in placelistsimple:
