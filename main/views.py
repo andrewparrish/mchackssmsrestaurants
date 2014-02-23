@@ -22,14 +22,14 @@ def gmaps(where):
 	jsonparse = json.load(j)
 	return jsonparse
 
-def places(latitude, longitude, food):
+def places(latitude, longitude, keyword):
 	url = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?'
 	params = urllib.urlencode({
 		'key' : 'AIzaSyAiWF1P0ha-Kxz9ahNz14at5FVKeUb1oiE',
 		'location' : str(latitude)+','+str(longitude),
-		'keyword' : food,
+		'keyword' : keyword,
 		'sensor' : 'false',
-		'rankby' : 'distance'
+		'radius' : 16093
 		})
 	j = urllib2.urlopen(url+params)
 	jsonparse = json.load(j)
@@ -40,7 +40,7 @@ def placelisting(jsonin):
 	for place in jsonin:
 		geometry = place['geometry']
 		latlong = geometry['location']
-		newplace = make_foodplace(place.get('rating', 0.0) , place['name'], place.get('price_level', 0), latlong['lat'], latlong['lng'], place.get('vicinity', ''))
+		newplace = make_place(place.get('rating', 0.0) , place['name'], place.get('price_level', 0), latlong['lat'], latlong['lng'], place.get('vicinity', ''))
 		places.append(newplace)
 	return places
 
@@ -67,7 +67,7 @@ def directionsto(latitude, longitude, destination):
 		'destination' : str(destination.latitude)+str(',')+str(destination.longitude),
 		'sensor' : 'false',
 		'mode' : 'transit',
-		'departure_time' : str(int(datetime.now().strftime("%s")) * 1000)
+		'departure_time' : str(int(datetime.now().strftime("%s")))
 		})
 	j = urllib2.urlopen(url+params)
 	jsonparse = json.load(j)
@@ -102,8 +102,20 @@ def gotoplace(request):
 			placelist = places(latitude, longitude, food)
 			if placelist['status'] == 'OK':
 				placelistsimple = placelisting(placelist['results'])
-				print placelistsimple[0].name
-				print directionsto(latitude, longitude, placelistsimple[0])
+				direct = directionsto(latitude, longitude, placelistsimple[0])
+				directionlist = []
+				legs = direct['routes'][0]['legs']
+				for leg in legs:
+					steps = leg['steps']
+					for step in steps:
+						if step['travel_mode'] == unicode('WALKING'):
+							directionlist.append(step['html_instructions'])
+							substeps = step['steps']
+							for substep in substeps:
+								directionlist.append(substep['html_instructions'])
+						elif step['travel_mode'] == unicode('TRANSIT'):
+							directionlist.append('Take '+step['transit_details']['line']['name']+' to '+step['transit_details']['arrival_stop']['name'])
+				print directionlist
 				redirect('/')
 			else:
 				redirect('/preferences')

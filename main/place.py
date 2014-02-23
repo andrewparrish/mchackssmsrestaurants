@@ -1,4 +1,4 @@
-class FoodPlace(object):
+class Place(object):
 	rating = 0.0
 	name = ''
 	price_level = 0
@@ -14,6 +14,6 @@ class FoodPlace(object):
 		self.longitude = longitude
 		self.vicinity = vicinity
 
-def make_foodplace(rating, name, price_level, latitude, longitude, vicinity):
-	place = FoodPlace(rating,name, price_level, latitude, longitude, vicinity)
+def make_place(rating, name, price_level, latitude, longitude, vicinity):
+	place = Place(rating,name, price_level, latitude, longitude, vicinity)
 	return place
