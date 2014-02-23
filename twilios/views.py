@@ -36,7 +36,7 @@ def whynot(request):
 	else:
 		user = Directions.objects.get(phone=sender[1:])
 		grp = re.match(r'^(\d)$', body)
-		if grp is not '':
+		if grp is not None:
 			return _fourth(grp.group(0), sender, user)
 		else:
 			if user.location is unicode(''):
