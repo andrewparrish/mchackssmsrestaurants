@@ -83,42 +83,41 @@ def directionsto(latitude, longitude, destination):
 		jsonparse = json.load(j)
 	return jsonparse
 
+def directionslistcomplete(keyword, where):
+	directionlist = []
+	jsonstuff = gmaps(where)
+	jsonstr = json.dumps(jsonstuff)
+	if jsonstuff['status'] == 'OK':
+		results = jsonstuff['results']
+		mapping =results[0]
+		location = mapping['geometry']
+		latlong = location['location']
+		latitude = latlong['lat']
+		longitude = latlong['lng']
+
+		placelist = places(latitude, longitude, keyword)
+		if placelist['status'] == 'OK':
+			placelistsimple = placelisting(placelist['results'])
+			direct = directionsto(latitude, longitude, placelistsimple[0])
+			legs = direct['routes'][0]['legs']
+			for leg in legs:
+				steps = leg['steps']
+				for step in steps:
+					if step['travel_mode'] == unicode('WALKING'):
+						directionlist.append(step['html_instructions'])
+					elif step['travel_mode'] == unicode('TRANSIT'):
+						directionlist.append('Take '+step['transit_details']['line']['name']+' to '+step['transit_details']['arrival_stop']['name'])
+			return directionlist
+		else:
+			return directionlist
+	else:
+		return directionlist
+
 def gotoplace(request):
 	if request.method == 'POST':
-		food = request.POST.get('food', 'food')
+		keyword = request.POST.get('keyword', '')
 		where = request.POST.get('where')
-		
-		jsonstuff = gmaps(where)
-		jsonstr = json.dumps(jsonstuff)
-		if jsonstuff['status'] == 'OK':
-			print 'okay'
-			results = jsonstuff['results']
-			mapping =results[0]
-			location = mapping['geometry']
-			latlong = location['location']
-			latitude = latlong['lat']
-			longitude = latlong['lng']
-
-			placelist = places(latitude, longitude, food)
-			if placelist['status'] == 'OK':
-				placelistsimple = placelisting(placelist['results'])
-				direct = directionsto(latitude, longitude, placelistsimple[0])
-				directionlist = []
-				legs = direct['routes'][0]['legs']
-				for leg in legs:
-					steps = leg['steps']
-					for step in steps:
-						if step['travel_mode'] == unicode('WALKING'):
-							directionlist.append(step['html_instructions'])
-							substeps = step['steps']
-							for substep in substeps:
-								directionlist.append(substep['html_instructions'])
-						elif step['travel_mode'] == unicode('TRANSIT'):
-							directionlist.append('Take '+step['transit_details']['line']['name']+' to '+step['transit_details']['arrival_stop']['name'])
-				print directionlist
-				redirect('/')
-			else:
-				redirect('/preferences')
-		else:
-			redirect('/preferences')
+		context = directionslistcomplete(keyword, where)
+	else:
+		redirect('/preferences')
 	return render_to_response('preferences.html',{},context_instance=RequestContext(request))
