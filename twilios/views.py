@@ -39,14 +39,16 @@ def whynot(request):
 	else:
 		user = Directions.objects.get(phone=sender[1:])
 		grp = re.match(r'^(\d)$', body)
-		if grp is not None:
+		if grp is not '':
 			return _fourth(grp.group(0), sender, user)
 		else:
-			if user.location is None:
+			if user.location is '':
 				user.location = body
+				user.save()
 				return _secondary(body, sender)
 			else:
-				user.directions = (body, sender)
+				user.directions = body
+				user.save()
 				return _tertiary(body, sender, user)
 		
 
