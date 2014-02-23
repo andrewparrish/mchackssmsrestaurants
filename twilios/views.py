@@ -87,7 +87,7 @@ def _tertiary(text, sender, user):
 #number recieved
 def _fourth(text, sender, user):
 	msg= twiml.Response()
-	jsonstuff = gmaps(user.location)
+	jsonstuff = gmaps(str(user.location))
 	jsonstr = json.dumps(jsonstuff)
 	if jsonstuff['status'] == 'OK':
 		results = jsonstuff['results']
@@ -97,7 +97,7 @@ def _fourth(text, sender, user):
 		latitude = latlong['lat']
 		longitude = latlong['lng']
 
-		placelist = places(latitude, longitude, user.directions)
+		placelist = places(latitude, longitude, str(user.directions))
 		if placelist['status'] == 'OK':
 			placelistsimple = placelisting(placelist['results'])
 			directs = directionsto(latitude, longitude, placelistsimple[int(text)])
