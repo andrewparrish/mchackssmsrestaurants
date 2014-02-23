@@ -3,6 +3,7 @@
 
 from django.shortcuts import render_to_response, redirect, render_to_response
 from django.http import HttpResponseRedirect, HttpResponse
+from main.view import *
 
 from twilio import twiml
 
