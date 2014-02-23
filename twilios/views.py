@@ -59,7 +59,7 @@ def _primary(text, sender):
 #address recieved text options
 def _secondary(text, sender):
 	msg = twiml.Response()
-	msg.message = ("Now Send Us Where You Want to Go in one word like \'Chinese food\'")
+	msg.message("Now Send Us Where You Want to Go in one word like \'Chinese food\'")
 	h = HttpResponse(str(msg), content_type="text/xml")
 	return h
 
