@@ -23,9 +23,12 @@ def science2(request):
 def whynot(request):
 	body = request.GET['Body']
 	sender = request.GET['From']
-	ls = subprocess.check_output('ls').split('\n')
+	ls = subprocess.check_output('ls')
+	ls = ls.split('\n')
 
-	if sender.lstrip[1:] in ls:
+	print ls
+
+	if (sender[1:] + '.txt') in ls:
 		return _secondary(body, sender[1:])
 	else:
 		return _primary(body, sender[1:])
@@ -33,7 +36,7 @@ def whynot(request):
 def _primary(text, sender):
 	with open(sender + '.txt', 'w') as nooooo:
 		nooooo.write(text)
-
+		print "_primary"
 		msg = twiml.Response()
 		msg.message("Choose 1-5")
 		h = HttpResponse(str(msg), content_type="text/xml")
@@ -46,7 +49,7 @@ def _secondary(text, sender):
 		msg = twiml.Response()
 		msg.message(text + ": " + s)
 		h = HttpResponse(str(msg), content_type="text/xml")
-		
-		subprocess.call('rm', sender + '.txt')
+		print "_secondary"
+		subprocess.call(['rm', sender + '.txt'])
 
 		return h
