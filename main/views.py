@@ -9,6 +9,8 @@ import urllib
 import json
 import re
 
+from place import *
+
 def foodchoose(food):
 	match = re.search(r'(\w+)\s+near\s+(\w+\s+)', food.lower())
 	matchtwo = re.search(r'(\w+)\s+(\w+\s+)', food.lower())
@@ -22,7 +24,6 @@ def foodchoose(food):
 def gmaps(where):
 	url = 'https://maps.googleapis.com/maps/api/geocode/json?'
 	params = urllib.urlencode({
-		'key' : 'AIzaSyAiWF1P0ha-Kxz9ahNz14at5FVKeUb1oiE',
 		'address' : ''+where,
 		'sensor' : 'false',
 		})
@@ -43,9 +44,14 @@ def places(latitude, longitude, food):
 	jsonparse = json.load(j)
 	return jsonparse
 
-def test(request):
-	return render(request, 'main/index2.html')
-
+def placelisting(jsonin):
+	places = []
+	for place in jsonin:
+		geometry = place['geometry']
+		latlong = geometry['location']
+		newplace = make_foodplace(place['rating'], place['name'], place['price_level'], latlong['lat'], latlong['lng'], place['vicinity'])
+		places.append(newplace)
+	return places
 
 def search(request):
 	q = request.GET.get('q', '')
@@ -59,7 +65,23 @@ def search(request):
 
 	return HttpResponse(json.dumps(jsonparse), content_type="application/json")
 
-def preferences(request):
+def home(request):
+	return render(request, 'main/index2.html')
+
+def directionsto(latitude, longitude, destination):
+	url = 'https://maps.googleapis.com/maps/api/directions/json?'
+	params = urllib.urlencode({
+		'key' : 'AIzaSyAiWF1P0ha-Kxz9ahNz14at5FVKeUb1oiE',
+		'origin' : str(latitude)+','+str(longitude),
+		'destination' : str(destination.latitude)+','+str(destination.longitude),
+		'sensor' : 'false',
+		'mode' : 'transit'
+		})
+	j = urllib2.urlopen(url+params)
+	jsonparse = json.load(j)
+	return jsonparse
+
+def gotoplace(request):
 	if request.method == 'POST':
 		food = request.POST.get('food', '')
 		where = request.POST.get('where')
@@ -67,7 +89,6 @@ def preferences(request):
 		foodarr = foodchoose(food)
 		jsonstuff = gmaps(where)
 		jsonstr = json.dumps(jsonstuff)
-		print jsonstr
 		if jsonstuff['status'] == 'OK':
 			print 'okay'
 			results = jsonstuff['results']
@@ -76,15 +97,18 @@ def preferences(request):
 			latlong = location['location']
 			latitude = latlong['lat']
 			longitude = latlong['lng']
-			print foodarr
 			if foodarr is 'false':
 				foodinput = 'food'
 			else:
 				foodinput = foodarr.group(0)
 
 			placelist = places(latitude, longitude, foodinput)
-			
-			return HttpResponse(json.dumps(placelist), content_type="application/json")
+			if placelist['status'] == 'OK':
+				placelistsimple = placelisting(placelist['results'])
+				print directionsto(latitude, longitude, placelistsimple[0])
+				redirect('/')
+			else:
+				redirect('/preferences')
 		else:
 			redirect('/preferences')
 
