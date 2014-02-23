@@ -27,7 +27,7 @@ def whynot(request):
 
 	if sender.lstrip("+") in ls:
 		return _secondary(body, sender.lstrip("+"))
-	else
+	else:
 		return _primary(body, sender.lstrip("+"))
 
 def _primary(text, sender):
