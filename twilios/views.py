@@ -38,7 +38,7 @@ def whynot(request):
 		return _primary(body, sender[1:])
 	else:
 		grp = re.match(r'^(\d)$', body)
-		if grp:
+		if grp is not None:
 			return _fourth(grp.group(0), sender, user)
 		else:
 			if user.location is None:
@@ -52,7 +52,7 @@ def whynot(request):
 def _primary(text, sender):
 	print "_primary"
 	msg = twiml.Response()
-	msg.message("Text where you are. (cross street 1, cross street 2, city")
+	msg.message("Text where you are. (cross street 1, cross street 2, city)")
 	h = HttpResponse(str(msg), content_type="text/xml")
 	return h
 
@@ -103,4 +103,5 @@ def _fourth(text, sender, user):
 			directs = directionsto(latitude, longitude, placelistsimple[int(text)])
 			for direct in directs:
 				msg.message+=str(direct)+'\n'
+	user.delete()g
 	h = HttpResponse(str(msg), content_type="text/xml")
