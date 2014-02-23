@@ -56,13 +56,13 @@ def _secondary(text, sender):
 		return h
 
 def _process_request(text):
-	if (text[0] >= "a" and text[0] < "g") ||(text[0] >= "A" and text[0] < "G"):
+	if (text[0] >= "a" and text[0] < "g") or(text[0] >= "A" and text[0] < "G"):
 	   return "No way, son."
-	if (text[0] >= "g" and text[0] < "n") ||(text[0] >= "G" and text[0] < "N"):
+	if (text[0] >= "g" and text[0] < "n") or(text[0] >= "G" and text[0] < "N"):
 	   return "For science!"
-	if (text[0] >= "n" and text[0] < "u") ||(text[0] >= "N" and text[0] < "U"):
+	if (text[0] >= "n" and text[0] < "u") or(text[0] >= "N" and text[0] < "U"):
 	   return "Try again later."
-	if (text[0] >= "u" and text[0] < "z") ||(text[0] >= "U" and text[0] < "Z"):
+	if (text[0] >= "u" and text[0] < "z") or(text[0] >= "U" and text[0] < "Z"):
 	   return "Most certainly."
 	else: 
 		return "NO U"
